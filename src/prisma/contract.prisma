@@ -19,12 +19,3 @@ model Post {
   createdAt TimestamptzString @default(now())
   updatedAt temporal.updatedAtString()
 }
-
-model Sentence {
-  id        Int               @id @default(autoincrement())
-  userId    String
-  text      String
-  createdAt TimestamptzString @default(now())
-
-  @@index([userId])
-}

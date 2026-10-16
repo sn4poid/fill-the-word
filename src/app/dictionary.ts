@@ -1,74 +1,101 @@
 export type Suggestion = {
-  text: string;
-  label: string;
+  word: string;
+  article?: string;
+  example: string;
 };
 
 const DICTIONARY: Record<string, Suggestion[]> = {
   umbrella: [
-    { text: "der Regenschirm", label: "Nomen, maskulin" },
-    { text: "der Schirm", label: "Nomen, maskulin · umgangssprachlich" },
+    {
+      word: "Regenschirm",
+      article: "der",
+      example: "Nimm den Regenschirm mit, es regnet.",
+    },
+    { word: "Schirm", article: "der", example: "Hast du deinen Schirm dabei?" },
   ],
-  dog: [
-    { text: "der Hund", label: "Nomen, maskulin" },
-    { text: "die Hündin", label: "Nomen, femininin · weiblicher Hund" },
+  weather: [
+    { word: "Wetter", article: "das", example: "Das Wetter ist heute schön." },
   ],
-  house: [
-    { text: "das Haus", label: "Nomen, neutrum" },
-    { text: "das Zuhause", label: "Nomen, neutrum · übertragen" },
+  train: [
+    { word: "Zug", article: "der", example: "Der Zug fährt um acht Uhr ab." },
+    {
+      word: "Bahn",
+      article: "die",
+      example: "Ich fahre mit der Bahn zur Arbeit.",
+    },
   ],
   coffee: [
-    { text: "der Kaffee", label: "Nomen, maskulin" },
-    { text: "einen Kaffee", label: "Nomen, maskulin · Akkusativ" },
+    {
+      word: "Kaffee",
+      article: "der",
+      example: "Ich trinke jeden Morgen einen Kaffee.",
+    },
   ],
   friend: [
-    { text: "der Freund", label: "Nomen, maskulin" },
-    { text: "die Freundin", label: "Nomen, femininin" },
-  ],
-  morning: [
-    { text: "der Morgen", label: "Nomen, maskulin" },
-    { text: "am Morgen", label: "Zeitangabe · Dativ" },
-  ],
-  rain: [
-    { text: "der Regen", label: "Nomen, maskulin" },
-    { text: "regnen", label: "Verb" },
+    { word: "Freund", article: "der", example: "Er ist mein bester Freund." },
+    {
+      word: "Freundin",
+      article: "die",
+      example: "Sie ist meine beste Freundin.",
+    },
   ],
   work: [
-    { text: "die Arbeit", label: "Nomen, femininin" },
-    { text: "arbeiten", label: "Verb" },
+    {
+      word: "Arbeit",
+      article: "die",
+      example: "Ich gehe jeden Tag zur Arbeit.",
+    },
+    { word: "arbeiten", example: "Ich muss heute länger arbeiten." },
   ],
+  tired: [{ word: "müde", example: "Ich bin heute sehr müde." }],
   happy: [
-    { text: "glücklich", label: "Adjektiv" },
-    { text: "froh", label: "Adjektiv · Synonym" },
+    { word: "glücklich", example: "Ich bin sehr glücklich." },
+    { word: "froh", example: "Ich bin froh, dich zu sehen." },
   ],
-  tired: [{ text: "müde", label: "Adjektiv" }],
-  book: [{ text: "das Buch", label: "Nomen, neutrum" }],
-  window: [{ text: "das Fenster", label: "Nomen, neutrum" }],
-  street: [{ text: "die Straße", label: "Nomen, femininin" }],
-  music: [{ text: "die Musik", label: "Nomen, femininin" }],
-  time: [
-    { text: "die Zeit", label: "Nomen, femininin" },
-    { text: "die Uhrzeit", label: "Nomen, femininin · Uhrzeit" },
+  city: [
+    { word: "Stadt", article: "die", example: "Die Stadt ist sehr lebendig." },
   ],
-  love: [
-    { text: "die Liebe", label: "Nomen, femininin" },
-    { text: "lieben", label: "Verb" },
+  morning: [
+    { word: "Morgen", article: "der", example: "Am Morgen trinke ich Kaffee." },
   ],
-  light: [
-    { text: "das Licht", label: "Nomen, neutrum" },
-    { text: "leicht", label: "Adjektiv · leicht/einfach" },
+  evening: [
+    { word: "Abend", article: "der", example: "Am Abend lese ich gern." },
   ],
-  city: [{ text: "die Stadt", label: "Nomen, femininin" }],
-  water: [{ text: "das Wasser", label: "Nomen, neutrum" }],
-  bread: [{ text: "das Brot", label: "Nomen, neutrum" }],
+  rain: [
+    { word: "Regen", article: "der", example: "Der Regen hört bald auf." },
+  ],
+  snow: [
+    { word: "Schnee", article: "der", example: "Der Schnee fällt leise." },
+  ],
+  book: [
+    { word: "Buch", article: "das", example: "Ich lese ein spannendes Buch." },
+  ],
+  phone: [
+    { word: "Telefon", article: "das", example: "Mein Telefon klingelt." },
+    {
+      word: "Handy",
+      article: "das",
+      example: "Ich habe mein Handy vergessen.",
+    },
+  ],
+  money: [
+    { word: "Geld", article: "das", example: "Ich habe nicht viel Geld." },
+  ],
+  house: [
+    {
+      word: "Haus",
+      article: "das",
+      example: "Wir wohnen in einem kleinen Haus.",
+    },
+  ],
+  street: [
+    { word: "Straße", article: "die", example: "Die Straße ist heute leer." },
+  ],
+  food: [
+    { word: "Essen", article: "das", example: "Das Essen schmeckt sehr gut." },
+  ],
 };
 
-function capitalize(word: string): string {
-  if (!word) return word;
-  return word.charAt(0).toUpperCase() + word.slice(1);
-}
-
-export function getSuggestions(word: string): Suggestion[] {
-  const entry = DICTIONARY[word.trim().toLowerCase()];
-  if (entry) return entry;
-  return [{ text: capitalize(word.trim()), label: "unbekannt" }];
+export function getSuggestions(word: string): Suggestion[] | null {
+  return DICTIONARY[word.trim().toLowerCase()] ?? null;
 }

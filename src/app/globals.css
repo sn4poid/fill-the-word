@@ -2,20 +2,22 @@
   color-scheme: light dark;
   --background: #ffffff;
   --foreground: #1a1a19;
-  --card: #ffffff;
-  --muted: #f0f0ed;
-  --muted-foreground: #5d5d58;
+  --muted-foreground: #6b6b66;
+  --faint: #9a9a94;
   --border: #d4d4ce;
+  --panel: #fafafa;
+  --overlay: rgba(0, 0, 0, 0.25);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0e0e0e;
     --foreground: oklch(0.94 0 0);
-    --card: #171717;
-    --muted: #262626;
     --muted-foreground: #9fa0a6;
+    --faint: #767680;
     --border: #34343a;
+    --panel: #161616;
+    --overlay: rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -32,53 +34,220 @@ body {
 }
 
 .shell {
+  position: relative;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1.75rem;
+}
+
+.wordmark {
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.menuButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--foreground);
+}
+
+.menuIcon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+  width: 1.25rem;
+}
+
+.menuIcon span {
+  display: block;
+  height: 1px;
+  background: currentColor;
+}
+
+.content {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.25rem;
-  padding: 1.5rem;
-}
-
-.mark {
-  width: 2.5rem;
-  height: 2.5rem;
+  gap: 1.75rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
 }
 
 .lede {
   margin: 0;
   color: var(--muted-foreground);
+  font-size: 1.15rem;
+  font-weight: 400;
+}
+
+.writingInput {
+  width: 100%;
+  max-width: 28rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  outline: none;
+  padding: 0.4rem 0;
+  font-size: 1.1rem;
+  font-family: inherit;
+  color: var(--foreground);
+  text-align: center;
+}
+
+.writingInput::placeholder {
+  color: var(--faint);
+}
+
+.writingInput:focus {
+  border-bottom-color: var(--muted-foreground);
+}
+
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  max-width: 28rem;
+}
+
+.suggestionChip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  padding: 0.6rem 0.9rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  text-align: left;
+  color: var(--foreground);
+  font-family: inherit;
+}
+
+.suggestionChip:hover {
+  border-color: var(--muted-foreground);
+}
+
+.suggestionText {
   font-size: 0.95rem;
 }
 
-.card {
-  width: 100%;
-  max-width: 16rem;
+.suggestionLabel {
+  font-size: 0.72rem;
+  color: var(--faint);
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 2.5rem;
+  transform: translateX(-50%);
+  font-size: 0.85rem;
+  color: var(--muted-foreground);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms ease;
+}
+
+.toast.visible {
+  opacity: 1;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  z-index: 10;
+}
+
+.historyPanel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(20rem, 85vw);
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  transform: translateX(100%);
+  transition: transform 300ms ease;
+  z-index: 20;
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
-  padding: 1rem;
-  border: 1px solid var(--border);
-  border-radius: 0.625rem;
-  background: var(--card);
+  padding: 2rem 1.5rem;
 }
 
-.bone {
-  height: 0.625rem;
-  border-radius: 0.375rem;
-  background: var(--muted);
-  animation: pulse 1.6s ease-in-out infinite;
+.historyPanel.open {
+  transform: translateX(0);
 }
 
-@keyframes pulse {
-  50% {
-    opacity: 0.45;
-  }
+.historyContent {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .bone {
-    animation: none;
-  }
+.historyEmpty {
+  margin: 0;
+  color: var(--faint);
+  font-size: 0.9rem;
+}
+
+.historyGroupLabel {
+  margin: 0 0 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.historyList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.historyItem {
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.signOutLink {
+  align-self: flex-start;
+  margin-top: 1.5rem;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.8rem;
+  color: var(--faint);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.signOutLink:hover {
+  color: var(--muted-foreground);
 }

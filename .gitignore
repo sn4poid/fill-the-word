@@ -5,3 +5,4 @@ dist/
 /.prisma-composer
 /.next/
 next-env.d.ts
+*.tsbuildinfo

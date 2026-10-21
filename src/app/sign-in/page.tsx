@@ -6,10 +6,10 @@ import { signIn } from "../actions.ts";
 export default async function SignIn({
   searchParams,
 }: {
-  searchParams: Promise<{ fehler?: string }>;
+  searchParams: Promise<{ error?: string }>;
 }) {
   if ((await currentUser()) !== null) redirect("/");
-  const { fehler } = await searchParams;
+  const { error } = await searchParams;
 
   return (
     <main className="screen">
@@ -38,7 +38,7 @@ export default async function SignIn({
           <button className="chip" type="submit">
             Weiter
           </button>
-          {fehler ? <p className="hint">Das passt nicht.</p> : null}
+          {error ? <p className="hint">Das passt nicht.</p> : null}
         </div>
       </form>
     </main>

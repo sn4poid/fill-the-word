@@ -11,7 +11,7 @@ const suggestions = z.object({
     .array(
       z.object({
         text: z.string().describe("the German word or phrase"),
-        label: z.string().describe("a one or two word hint: case, register or nuance"),
+        label: z.string().describe("a one or two word hint in English: case, register or nuance"),
       }),
     )
     .min(2)
@@ -28,7 +28,7 @@ async function fromModel(word: string, line: string): Promise<Suggestion[]> {
       `English word or phrase: ${word}\n` +
       `Give two or three ways to say it in German that fit this sentence. ` +
       `Each needs the German text, inflected so it can be dropped straight into the sentence, ` +
-      `and a short German label such as "Akkusativ", "formell" or "umgangssprachlich".`,
+      `and a short English label such as "accusative", "formal" or "colloquial".`,
   });
 
   return object.suggestions;

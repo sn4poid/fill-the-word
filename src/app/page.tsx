@@ -6,7 +6,7 @@ import Writer from "./writer.tsx";
 
 export default async function Home() {
   const user = await currentUser();
-  if (user === null) redirect("/anmelden");
+  if (user === null) redirect("/sign-in");
 
   return <Writer history={await loadHistory(user.id)} />;
 }

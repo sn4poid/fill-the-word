@@ -39,7 +39,7 @@ export async function signIn(formData: FormData): Promise<void> {
     .toLowerCase();
   const userId = await authenticate(email, String(formData.get("password") ?? ""));
 
-  if (userId === null) redirect("/anmelden?fehler=1");
+  if (userId === null) redirect("/sign-in?error=1");
 
   await startSession(userId);
   redirect("/");
@@ -47,13 +47,13 @@ export async function signIn(formData: FormData): Promise<void> {
 
 export async function signOut(): Promise<void> {
   await endSession();
-  redirect("/anmelden");
+  redirect("/sign-in");
 }
 
 /** Saves one sentence and answers with the writer's history including it. */
 export async function saveSentence(text: string): Promise<SentenceGroup[]> {
   const user = await currentUser();
-  if (user === null) redirect("/anmelden");
+  if (user === null) redirect("/sign-in");
 
   const sentence = text.trim();
   if (sentence.length > 0) {

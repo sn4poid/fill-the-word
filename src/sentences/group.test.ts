@@ -6,7 +6,7 @@ import { groupByDay } from "./group.ts";
 const now = new Date(2026, 9, 21, 12, 0);
 
 function at(timestamp: string, id: number) {
-  return { id, text: `Satz ${id}`, createdAt: timestamp };
+  return { id, text: `Sentence ${id}`, createdAt: timestamp };
 }
 
 test("labels the days as Heute, Gestern and a German date", () => {
@@ -30,8 +30,8 @@ test("keeps the sentences of one day together in the order given", () => {
 
   expect(groups).toHaveLength(1);
   expect(groups[0].sentences).toEqual([
-    { id: 2, text: "Satz 2" },
-    { id: 1, text: "Satz 1" },
+    { id: 2, text: "Sentence 2" },
+    { id: 1, text: "Sentence 1" },
   ]);
 });
 

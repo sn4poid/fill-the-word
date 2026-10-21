@@ -8,7 +8,7 @@ test("falls back to the dictionary when no OPENAI_API_KEY is set", async () => {
   const found = await suggestGerman("umbrella", "Heute brauchte ich einen [umbrella].");
 
   expect(found.length).toBeGreaterThanOrEqual(2);
-  expect(found[0]).toEqual({ text: "den Regenschirm", label: "Akkusativ" });
+  expect(found[0]).toEqual({ text: "den Regenschirm", label: "accusative" });
 });
 
 test("answers with nothing for a word the dictionary does not know", async () => {

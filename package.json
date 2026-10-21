@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "next build",
+    "check:types": "tsc --noEmit",
     "composer:deploy": "prisma deploy module.ts",
     "composer:dev": "prisma dev module.ts",
     "contract:emit": "prisma contract emit",
@@ -22,17 +23,21 @@
     "migration:status": "prisma migration status",
     "skills:sync": "prisma skills sync || exit 0",
     "start": "next start",
+    "test": "vitest run",
     "postinstall": "prisma skills sync || exit 0"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^4.0.99",
     "@prisma/composer": "0.28.0",
     "@prisma/composer-prisma-cloud": "0.28.0",
     "@prisma/orm-postgres": "8.0.0-rc.16",
+    "ai": "^7.0.148",
     "alchemy": "2.0.0-beta.78",
     "next": "16.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "temporal-polyfill": "^1.0.5"
+    "temporal-polyfill": "^1.0.5",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@prisma/dev": "0.25.2",
@@ -43,7 +48,8 @@
     "eslint-config-next": "16.4.0",
     "prisma": "8.0.0-rc.21",
     "tsx": "^4.23.15",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.5"
   },
   "overrides": {
     "effect": "4.0.0-rc.115",

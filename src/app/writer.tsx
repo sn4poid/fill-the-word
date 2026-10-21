@@ -2,14 +2,15 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 
-import type { SentenceGroup } from "../sentences/group.ts";
+import { withoutSentence, type SentenceGroup } from "../sentences/group.ts";
 import { findBracketed, replaceBracketed } from "../suggestions/brackets.ts";
 import type { Suggestion } from "../suggestions/dictionary.ts";
 import { suggestGerman } from "../suggestions/suggest.ts";
-import { saveSentence, signOut } from "./actions.ts";
+import { deleteSentence, saveSentence, signOut } from "./actions.ts";
 
 const SUGGEST_DELAY_MS = 450;
 const SAVED_VISIBLE_MS = 1500;
+const CONFIRM_VISIBLE_MS = 3000;
 
 export default function Writer({ history }: { history: SentenceGroup[] }) {
   const [line, setLine] = useState("");
@@ -20,6 +21,9 @@ export default function Writer({ history }: { history: SentenceGroup[] }) {
   const [groups, setGroups] = useState(history);
   const [savedAt, setSavedAt] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  // The sentence whose "×" has been clicked once, and the one a delete failed on.
+  const [asking, setAsking] = useState<number | null>(null);
+  const [failed, setFailed] = useState<number | null>(null);
 
   const input = useRef<HTMLInputElement>(null);
   const cursor = useRef<number | null>(null);
@@ -60,6 +64,13 @@ export default function Writer({ history }: { history: SentenceGroup[] }) {
     return () => clearTimeout(timer);
   }, [savedAt]);
 
+  // A question that goes unanswered for a few seconds takes itself back.
+  useEffect(() => {
+    if (asking === null) return;
+    const timer = setTimeout(() => setAsking(null), CONFIRM_VISIBLE_MS);
+    return () => clearTimeout(timer);
+  }, [asking]);
+
   function accept(suggestion: Suggestion) {
     const bracketed = findBracketed(line);
     if (bracketed === null) return;
@@ -83,6 +94,26 @@ export default function Writer({ history }: { history: SentenceGroup[] }) {
       setSavedAt(Date.now());
     } catch {
       setLine(sentence);
+    }
+  }
+
+  /** First click asks, the second one deletes. */
+  async function erase(id: number) {
+    if (asking !== id) {
+      setAsking(id);
+      return;
+    }
+
+    const kept = groups;
+    setAsking(null);
+    setFailed(null);
+    setGroups(withoutSentence(groups, id));
+
+    try {
+      setGroups(await deleteSentence(id));
+    } catch {
+      setGroups(kept);
+      setFailed(id);
     }
   }
 
@@ -156,7 +187,19 @@ export default function Writer({ history }: { history: SentenceGroup[] }) {
             <section key={group.label}>
               <h2 className="day">{group.label}</h2>
               {group.sentences.map((sentence) => (
-                <p key={sentence.id}>{sentence.text}</p>
+                <p key={sentence.id} className="entry">
+                  <span>{sentence.text}</span>
+                  {failed === sentence.id ? <span className="unerased">nicht gelöscht</span> : null}
+                  <button
+                    className="erase"
+                    type="button"
+                    data-asking={asking === sentence.id}
+                    aria-label={asking === sentence.id ? "Löschen bestätigen" : "Satz löschen"}
+                    onClick={() => void erase(sentence.id)}
+                  >
+                    {asking === sentence.id ? "wirklich?" : "×"}
+                  </button>
+                </p>
               ))}
             </section>
           ))}

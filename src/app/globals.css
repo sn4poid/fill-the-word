@@ -203,6 +203,50 @@ body {
   line-height: 1.55;
 }
 
+.entry {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.entry span:first-child {
+  flex: 1;
+}
+
+/* The delete control waits out of sight until the sentence is pointed at. */
+.erase,
+.unerased {
+  flex: none;
+  font-family: inherit;
+  font-size: 0.75rem;
+  color: var(--quiet);
+}
+
+.erase {
+  padding: 0;
+  border: 0;
+  background: none;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.entry:hover .erase,
+.erase:focus-visible,
+.erase[data-asking="true"] {
+  opacity: 1;
+}
+
+.erase:hover {
+  color: var(--foreground);
+}
+
+/* Without hover there is nothing to point with, so the control stays visible. */
+@media (hover: none) {
+  .erase {
+    opacity: 1;
+  }
+}
+
 .signout {
   padding: 0;
   border: 0;

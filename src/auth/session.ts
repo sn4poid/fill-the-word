@@ -48,16 +48,26 @@ export async function currentUser(): Promise<SignedInUser | null> {
   return db.orm.public.User.select("id", "email").first({ id: userId });
 }
 
+// The preview shows the app in a frame on another site, and a browser only keeps
+// a cookie from there when it says SameSite=None, Secure and Partitioned — the
+// attributes the preview's own cookie uses. A Lax cookie is dropped, which signs
+// the writer out again on the first request after signing in.
+const COOKIE_ATTRIBUTES = {
+  httpOnly: true,
+  sameSite: "none",
+  secure: true,
+  partitioned: true,
+  path: "/",
+} as const;
+
 export async function startSession(userId: number): Promise<void> {
   (await cookies()).set(COOKIE_NAME, `${userId}.${sign(userId)}`, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
+    ...COOKIE_ATTRIBUTES,
     maxAge: COOKIE_MAX_AGE,
-    secure: process.env.NODE_ENV === "production",
   });
 }
 
 export async function endSession(): Promise<void> {
-  (await cookies()).delete(COOKIE_NAME);
+  // Cleared with the attributes it was set with, so the browser drops that cookie.
+  (await cookies()).set(COOKIE_NAME, "", { ...COOKIE_ATTRIBUTES, maxAge: 0 });
 }

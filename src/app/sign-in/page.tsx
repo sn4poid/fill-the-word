@@ -14,7 +14,7 @@ export default async function SignIn({
   return (
     <main className="screen">
       <form className="writing" action={signIn}>
-        <h1 className="headline">Wortlücke</h1>
+        <h1 className="headline">Satzweise</h1>
         <input
           className="line"
           type="email"

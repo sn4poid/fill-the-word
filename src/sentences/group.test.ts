@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 
-import { groupByDay } from "./group.ts";
+import { groupByDay, withoutSentence } from "./group.ts";
 
 // Midday timestamps, so the grouping lands on the same calendar day in any time zone.
 const now = new Date(2026, 9, 21, 12, 0);
@@ -37,4 +37,38 @@ test("keeps the sentences of one day together in the order given", () => {
 
 test("has no groups without sentences", () => {
   expect(groupByDay([], now)).toEqual([]);
+});
+
+const twoDays = [
+  {
+    label: "Heute",
+    sentences: [
+      { id: 3, text: "Drei" },
+      { id: 2, text: "Zwei" },
+    ],
+  },
+  { label: "Gestern", sentences: [{ id: 1, text: "Eins" }] },
+];
+
+test("takes one sentence out of its day", () => {
+  expect(withoutSentence(twoDays, 2)).toEqual([
+    { label: "Heute", sentences: [{ id: 3, text: "Drei" }] },
+    { label: "Gestern", sentences: [{ id: 1, text: "Eins" }] },
+  ]);
+});
+
+test("drops the day the last sentence leaves empty", () => {
+  expect(withoutSentence(twoDays, 1)).toEqual([
+    {
+      label: "Heute",
+      sentences: [
+        { id: 3, text: "Drei" },
+        { id: 2, text: "Zwei" },
+      ],
+    },
+  ]);
+});
+
+test("leaves the history alone when the sentence is not in it", () => {
+  expect(withoutSentence(twoDays, 9)).toEqual(twoDays);
 });

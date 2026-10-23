@@ -88,7 +88,7 @@ export default function Writer({ history }: { history: SentenceGroup[] }) {
 
   return (
     <>
-      <span className="wordmark">Wortlücke</span>
+      <span className="wordmark">Satzweise</span>
       <button className="menu" type="button" aria-label="Verlauf" onClick={() => setMenuOpen(true)}>
         <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true">
           <path d="M1 4.5h14M1 11.5h14" stroke="currentColor" strokeWidth="1" fill="none" />

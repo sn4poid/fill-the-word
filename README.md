@@ -1,5 +1,7 @@
 # fill-the-word
 
+Hello
+
 A minimal next app with Prisma 8 and Prisma Composer.
 
 ## Run locally

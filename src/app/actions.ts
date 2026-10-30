@@ -62,3 +62,15 @@ export async function saveSentence(text: string): Promise<SentenceGroup[]> {
 
   return loadHistory(user.id);
 }
+
+/** Deletes one sentence of the writer and answers with the history left. */
+export async function deleteSentence(id: number): Promise<SentenceGroup[]> {
+  const user = await currentUser();
+  if (user === null) redirect("/sign-in");
+
+  // The writer's own id is part of the filter, so a guessed id finds nothing
+  // and no one can delete a sentence that belongs to somebody else.
+  await db.orm.public.Sentence.where({ id, userId: user.id }).deleteAll();
+
+  return loadHistory(user.id);
+}

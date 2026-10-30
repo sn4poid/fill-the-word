@@ -10,6 +10,18 @@ export type SentenceGroup = {
   sentences: { id: number; text: string }[];
 };
 
+/** The groups without one sentence, and without a day that it leaves empty. */
+export function withoutSentence(groups: readonly SentenceGroup[], id: number): SentenceGroup[] {
+  const left: SentenceGroup[] = [];
+
+  for (const group of groups) {
+    const sentences = group.sentences.filter((sentence) => sentence.id !== id);
+    if (sentences.length > 0) left.push({ label: group.label, sentences });
+  }
+
+  return left;
+}
+
 const germanDate = new Intl.DateTimeFormat("de-DE", {
   day: "numeric",
   month: "long",
